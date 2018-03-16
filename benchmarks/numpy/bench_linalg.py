@@ -2,9 +2,12 @@ from __future__ import absolute_import, division, print_function
 
 from .common import Benchmark, get_squares_, get_indexes_rand, TYPES1
 
-import numpy as np
+import cupy as np
+
+from benchmarks.utils import sync
 
 
+@sync
 class Eindot(Benchmark):
     def setup(self):
         self.a = np.arange(60000.0).reshape(150, 400)
@@ -73,13 +76,14 @@ class Eindot(Benchmark):
         np.tensordot(self.a3, self.b3, axes=([1, 0], [0, 1]))
 
 
+@sync
 class Linalg(Benchmark):
     params = [['svd', 'pinv', 'det', 'norm'],
               TYPES1]
     param_names = ['op', 'type']
 
     def setup(self, op, typename):
-        np.seterr(all='ignore')
+        #np.seterr(all='ignore')
 
         self.func = getattr(np.linalg, op)
 
@@ -100,6 +104,7 @@ class Linalg(Benchmark):
         self.func(self.a)
 
 
+@sync
 class Lstsq(Benchmark):
     def setup(self):
         self.a = get_squares_()['float64']

@@ -2,9 +2,13 @@ from __future__ import absolute_import, division, print_function
 
 from .common import Benchmark
 
-import numpy as np
+import cupy as np
+
+import math
+from benchmarks.utils import sync
 
 
+@sync
 class Histogram1D(Benchmark):
     def setup(self):
         self.d = np.linspace(0, 100, 100000)

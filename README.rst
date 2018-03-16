@@ -49,3 +49,16 @@ Alternatively you can use Docker.
 
     # Run benchmark.
     nvidia-docker run --rm -u $(id -u):$(id -g) -v ${PWD}:/benchmarks -w /benchmarks -e HOME=/benchmarks cupy-benchmark asv run --step 1 master
+
+NumPy Benchmark
+---------------
+
+``benchmarks/numpy`` directory contains `benchmark scripts <https://github.com/numpy/numpy/tree/master/benchmarks>`_ forked from NumPy 1.14.2, with the following modifications:
+
+* Replace ``import numpy as np`` with ``import cupy as np``.
+* Add ``@sync`` decorator to each benchmark classes.
+
+Some other tiny modifications (remove unsupported dtypes etc.) are also applied to fill the gap between NumPy and CuPy.
+
+Benchmarks for features implemented in NumPy but not in CuPy are left intentionally.
+It is an expected to see such error (e.g., ``AttributeError: module 'cupy' has no attribute 'tril'``) is shown during benchmark.

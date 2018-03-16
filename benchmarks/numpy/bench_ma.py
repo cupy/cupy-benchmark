@@ -2,9 +2,12 @@ from __future__ import absolute_import, division, print_function
 
 from .common import Benchmark
 
-import numpy as np
+import cupy as np
+
+from benchmarks.utils import sync
 
 
+@sync
 class MA(Benchmark):
     def setup(self):
         self.l100 = range(100)
@@ -20,6 +23,7 @@ class MA(Benchmark):
         np.ma.masked_array(self.l100, self.t100)
 
 
+@sync
 class Indexing(Benchmark):
     param_names = ['masked', 'ndim', 'size']
     params = [[True, False],
@@ -47,6 +51,7 @@ class Indexing(Benchmark):
         self.m[self.idx_1d]
 
 
+@sync
 class UFunc(Benchmark):
     param_names = ['a_masked', 'b_masked', 'size']
     params = [[True, False],
@@ -79,6 +84,7 @@ class UFunc(Benchmark):
         np.ma.add(self.a_2d, self.b_2d)
 
 
+@sync
 class Concatenate(Benchmark):
     param_names = ['mode', 'n']
     params = [

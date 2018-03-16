@@ -2,9 +2,13 @@ from __future__ import absolute_import, division, print_function
 
 from .common import Benchmark
 
-import numpy as np
+import cupy as np
+
+import math
+from benchmarks.utils import sync
 
 
+@sync
 class Core(Benchmark):
     def setup(self):
         self.l100 = range(100)
@@ -76,6 +80,7 @@ class Core(Benchmark):
         np.tril(self.l10x10)
 
 
+@sync
 class Temporaries(Benchmark):
     def setup(self):
         self.amid = np.ones(50000)
@@ -96,15 +101,16 @@ class Temporaries(Benchmark):
         (self.alarge + self.blarge) - 2
 
 
+@sync
 class CorrConv(Benchmark):
-    params = [[50, 1000, 1e5],
-              [10, 100, 1000, 1e4],
+    params = [[50, 1000, 10**5],
+              [10, 100, 1000, 10**4],
               ['valid', 'same', 'full']]
     param_names = ['size1', 'size2', 'mode']
 
     def setup(self, size1, size2, mode):
         self.x1 = np.linspace(0, 1, num=size1)
-        self.x2 = np.cos(np.linspace(0, 2*np.pi, num=size2))
+        self.x2 = np.cos(np.linspace(0, 2*math.pi, num=size2))
 
     def time_correlate(self, size1, size2, mode):
         np.correlate(self.x1, self.x2, mode=mode)
@@ -113,12 +119,13 @@ class CorrConv(Benchmark):
         np.convolve(self.x1, self.x2, mode=mode)
 
 
+@sync
 class CountNonzero(Benchmark):
     param_names = ['numaxes', 'size', 'dtype']
     params = [
         [1, 2, 3],
         [100, 10000, 1000000],
-        [bool, int, str, object]
+        [bool, int]
     ]
 
     def setup(self, numaxes, size, dtype):
@@ -137,9 +144,10 @@ class CountNonzero(Benchmark):
                 self.x.ndim - 1, self.x.ndim - 2))
 
 
+@sync
 class PackBits(Benchmark):
     param_names = ['dtype']
-    params = [[bool, np.uintp]]
+    params = [[bool, np.uint64]]
     def setup(self, dtype):
         self.d = np.ones(10000, dtype=dtype)
         self.d2 = np.ones((200, 1000), dtype=dtype)
@@ -154,6 +162,7 @@ class PackBits(Benchmark):
         np.packbits(self.d2, axis=1)
 
 
+@sync
 class UnpackBits(Benchmark):
     def setup(self):
         self.d = np.ones(10000, dtype=np.uint8)
@@ -169,6 +178,7 @@ class UnpackBits(Benchmark):
         np.unpackbits(self.d2, axis=1)
 
 
+@sync
 class Indices(Benchmark):
     def time_indices(self):
         np.indices((1000, 500))

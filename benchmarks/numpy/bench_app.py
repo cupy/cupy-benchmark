@@ -2,11 +2,14 @@ from __future__ import absolute_import, division, print_function
 
 from .common import Benchmark
 
-import numpy as np
+import cupy as np
 
 from six.moves import xrange
 
+from benchmarks.utils import sync
 
+
+@sync
 class LaplaceInplace(Benchmark):
     params = ['inplace', 'normal']
     param_names = ['update']
@@ -53,6 +56,7 @@ class LaplaceInplace(Benchmark):
         self.run()
 
 
+@sync
 class MaxesOfDots(Benchmark):
     def setup(self):
         np.random.seed(1)

@@ -6,11 +6,14 @@ from os.path import join as pjoin
 import shutil
 import sys
 import six
-from numpy import memmap, float32, array
-import numpy as np
+from cupy import float32, array
+import cupy as np
 from tempfile import mkdtemp
 
+from benchmarks.utils import sync
 
+
+@sync
 class Indexing(Benchmark):
     params = [["indexes_", "indexes_rand_"],
               ['I', ':,I', 'np.ix_(I, I)'],
@@ -38,6 +41,7 @@ class Indexing(Benchmark):
         self.func()
 
 
+@sync
 class IndexingSeparate(Benchmark):
     def setup(self):
         self.tmp_dir = mkdtemp()
@@ -58,6 +62,7 @@ class IndexingSeparate(Benchmark):
             self.fp[self.indexes]
 
 
+@sync
 class IndexingStructured0D(Benchmark):
     def setup(self):
         self.dt = np.dtype([('a', 'f4', 256)])

@@ -2,9 +2,12 @@ from __future__ import absolute_import, division, print_function
 
 from .common import Benchmark, TYPES1, get_squares
 
-import numpy as np
+import cupy as np
+
+from benchmarks.utils import sync
 
 
+@sync
 class AddReduce(Benchmark):
     def setup(self):
         self.squares = get_squares().values()
@@ -16,6 +19,7 @@ class AddReduce(Benchmark):
         [np.add.reduce(a, axis=1) for a in self.squares]
 
 
+@sync
 class AddReduceSeparate(Benchmark):
     params = [[0, 1], TYPES1]
     param_names = ['axis', 'type']
@@ -27,6 +31,7 @@ class AddReduceSeparate(Benchmark):
         np.add.reduce(self.a, axis=axis)
 
 
+@sync
 class AnyAll(Benchmark):
     def setup(self):
         self.zeros = np.zeros(100000, bool)
@@ -45,8 +50,9 @@ class AnyAll(Benchmark):
         self.zeros.any()
 
 
+@sync
 class MinMax(Benchmark):
-    params = [np.float32, np.float64, np.intp]
+    params = [np.float32, np.float64, np.int64]
     param_names = ['dtype']
 
     def setup(self, dtype):
@@ -59,6 +65,7 @@ class MinMax(Benchmark):
         np.max(self.d)
 
 
+@sync
 class SmallReduction(Benchmark):
     def setup(self):
         self.d = np.ones(100, dtype=np.float32)

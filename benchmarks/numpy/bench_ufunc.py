@@ -2,7 +2,9 @@ from __future__ import absolute_import, division, print_function
 
 from .common import Benchmark, get_squares_
 
-import numpy as np
+import cupy as np
+
+from benchmarks.utils import sync
 
 
 ufuncs = ['abs', 'absolute', 'add', 'arccos', 'arccosh', 'arcsin', 'arcsinh',
@@ -25,6 +27,7 @@ for name in dir(np):
         print("Missing ufunc %r" % (name,))
 
 
+@sync
 class Broadcast(Benchmark):
     def setup(self):
         self.d = np.ones((50000, 100), dtype=np.float64)
@@ -34,13 +37,14 @@ class Broadcast(Benchmark):
         self.d - self.e
 
 
+@sync
 class UFunc(Benchmark):
     params = [ufuncs]
     param_names = ['ufunc']
     timeout = 10
 
     def setup(self, ufuncname):
-        np.seterr(all='ignore')
+        #np.seterr(all='ignore')
         try:
             self.f = getattr(np, ufuncname)
         except AttributeError:
@@ -58,6 +62,7 @@ class UFunc(Benchmark):
         [self.f(*arg) for arg in self.args]
 
 
+@sync
 class Custom(Benchmark):
     def setup(self):
         self.b = np.ones(20000, dtype=bool)
@@ -75,6 +80,7 @@ class Custom(Benchmark):
         (self.b | self.b)
 
 
+@sync
 class CustomInplace(Benchmark):
     def setup(self):
         self.c = np.ones(500000, dtype=np.int8)
@@ -114,6 +120,7 @@ class CustomInplace(Benchmark):
         1. + self.d + 1.
 
 
+@sync
 class CustomScalar(Benchmark):
     params = [np.float32, np.float64]
     param_names = ['dtype']
@@ -134,6 +141,7 @@ class CustomScalar(Benchmark):
         (self.d < 1)
 
 
+@sync
 class Scalar(Benchmark):
     def setup(self):
         self.x = np.asarray(1.0)

@@ -2,9 +2,11 @@ from __future__ import absolute_import, division, print_function
 
 from .common import Benchmark
 
-import numpy as np
+import cupy as np
 
+from benchmarks.utils import sync
 
+@sync
 class Random(Benchmark):
     params = ['normal', 'uniform', 'weibull 1', 'binomial 10 0.5',
               'poisson 10']
@@ -21,6 +23,7 @@ class Random(Benchmark):
         self.func(*self.params)
 
 
+@sync
 class Shuffle(Benchmark):
     def setup(self):
         self.a = np.arange(100000)
@@ -29,6 +32,7 @@ class Shuffle(Benchmark):
         np.random.shuffle(self.a)
 
 
+@sync
 class Randint(Benchmark):
 
     def time_randint_fast(self):
@@ -40,6 +44,7 @@ class Randint(Benchmark):
         np.random.randint(0, 2**30 + 1, size=10**5)
 
 
+@sync
 class Randint_dtype(Benchmark):
     high = {
         'bool': 1,

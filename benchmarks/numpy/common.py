@@ -1,7 +1,9 @@
 from __future__ import absolute_import, division, print_function
 
-import numpy
+import cupy as numpy
 import random
+
+from benchmarks import BenchmarkBase
 
 # Various pre-crafted datasets/variables for testing
 # !!! Must not be changed -- only appended !!!
@@ -21,10 +23,8 @@ TYPES1 = [
     'int16', 'float16',
     'int32', 'float32',
     'int64', 'float64',  'complex64',
-    'longfloat', 'complex128',
+    'complex128',
 ]
-if 'complex256' in numpy.typeDict:
-    TYPES1.append('complex256')
 
 
 def memoize(func):
@@ -112,5 +112,5 @@ def get_indexes_rand_():
     return indexes_rand_
 
 
-class Benchmark(object):
+class Benchmark(BenchmarkBase):
     goal_time = 0.25

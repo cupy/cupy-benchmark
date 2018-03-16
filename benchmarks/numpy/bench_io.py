@@ -2,9 +2,12 @@ from __future__ import absolute_import, division, print_function
 
 from .common import Benchmark, get_squares
 
-import numpy as np
+import cupy as np
+
+from benchmarks.utils import sync
 
 
+@sync
 class Copy(Benchmark):
     params = ["int8", "int16", "float32", "float64",
               "complex64", "complex128"]
@@ -30,6 +33,7 @@ class Copy(Benchmark):
         self.dflat[::2] = 2
 
 
+@sync
 class CopyTo(Benchmark):
     def setup(self):
         self.d = np.ones(50000)
@@ -56,6 +60,7 @@ class CopyTo(Benchmark):
         np.copyto(self.d, self.e, where=self.im8)
 
 
+@sync
 class Savez(Benchmark):
     def setup(self):
         self.squares = get_squares()
