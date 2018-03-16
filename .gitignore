@@ -1,0 +1,7 @@
+html/
+results/
+env/
+cupy/
+.asv-machine.json
+*.pyc
+*.pyo
