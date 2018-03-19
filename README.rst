@@ -61,4 +61,4 @@ NumPy Benchmark
 Some other tiny modifications (remove unsupported dtypes etc.) are also applied to fill the gap between NumPy and CuPy.
 
 Benchmarks for features implemented in NumPy but not in CuPy are left intentionally.
-It is an expected to see such error (e.g., ``AttributeError: module 'cupy' has no attribute 'tril'``) is shown during benchmark.
+It is an expected behavior to see such error (e.g., ``AttributeError: module 'cupy' has no attribute 'tril'``) during benchmark.
