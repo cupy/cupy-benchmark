@@ -1,0 +1,13 @@
+os: linux
+
+sudo: false
+
+language: python
+
+install:
+  - pip install hacking autopep8
+
+script:
+  - flake8
+  - autopep8 -r . --diff | tee check_autopep8
+  - test ! -s check_autopep8
