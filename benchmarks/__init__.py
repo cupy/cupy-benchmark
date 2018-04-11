@@ -1,4 +1,5 @@
 import inspect
+import timeit
 
 # Ensure that CuPy and cuDNN are available.
 import cupy  # NOQA
@@ -10,6 +11,12 @@ class BenchmarkBase(object):
 
     See also: http://asv.readthedocs.io/en/v0.2.1/writing_benchmarks.html
     """
+
+    # Use wall-clock timer instead of CPU timer
+    timer = timeit.default_timer
+
+    # Allow up to 10 minutes, instead of the default (60 seconds).
+    timeout = 600
 
     def __init__(self, *args, **kwargs):
         # Set pretty_name to ``<class>.<function_name>`` instead of the default
