@@ -12,14 +12,14 @@ def fuse_shapes(*shape_args, **shapes_dict):
     def decorator(func):
         fused_func = cupy.fuse(func)
         @functools.wraps(func)
-        def wrapper(self, fusion_param):
-            if fusion_param == 'enabled':
+        def wrapper(self, fusion_mode):
+            if fusion_mode == 'enabled':
                 fused_func(*args)
-            elif fusion_param == 'disabled':
+            elif fusion_mode == 'disabled':
                 func(*args)
-            elif fusion_param == 'compile':
+            elif fusion_mode == 'compile':
                 raise NotImplementedError
-                # TODO (imanishi)
+                # TODO(imanishi)
                 # fused_func._memo = {}
                 # fused_func.compile(*args)
             else:
@@ -28,6 +28,7 @@ def fuse_shapes(*shape_args, **shapes_dict):
         uniform = cupy.random.uniform
         args = []
         if shape_args:
+            assert len(shapes_dict) == 0
             for name in inspect.getargspec(func).args:
                 args.append(uniform(0, 200, shape_args, cupy.float32))
         else:
@@ -42,10 +43,10 @@ def fuse_shapes(*shape_args, **shapes_dict):
 
 
 @sync
-@parameterize([('fusion_param', ['enabled', 'disabled'])])
+@parameterize([('fusion_mode', ['enabled', 'disabled'])])
 class Fusion(Benchmark):
-    def setup(self, fusion_enabled):
-        self.x = cupy.arange(240000.0).reshape(400, 600)
+    def setup(self, fusion_mode):
+        pass
 
     @fuse_shapes(1000, 1000)
     def time_fusion_add_10_times(x):
