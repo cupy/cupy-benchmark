@@ -1,7 +1,7 @@
 import functools
 import inspect
 
-from benchmarks.numpy.common import Benchmark
+from benchmarks import BenchmarkBase
 from benchmarks.utils import sync
 from benchmarks.utils.helper import parameterize
 
@@ -44,7 +44,7 @@ def fuse_shapes(*shape_args, **shapes_dict):
 
 @sync
 @parameterize([('fusion_mode', ['enabled', 'disabled'])])
-class Fusion(Benchmark):
+class Fusion(BenchmarkBase):
     def setup(self, fusion_mode):
         pass
 
