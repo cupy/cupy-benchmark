@@ -1,11 +1,11 @@
-from benchmarks.numpy.common import Benchmark
+from benchmarks import BenchmarkBase
 from benchmarks.utils import sync
 
 import cupy
 
 
 @sync
-class Eindot(Benchmark):
+class Eindot(BenchmarkBase):
     def setup(self):
         self.b = cupy.arange(240000.0).reshape(400, 600)
         self.sq1 = cupy.arange(160000).reshape(400, 400)
