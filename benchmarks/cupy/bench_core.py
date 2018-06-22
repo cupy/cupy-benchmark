@@ -1,4 +1,4 @@
-from benchmarks.numpy.common import Benchmark
+from benchmarks import BenchmarkBase
 from benchmarks.utils import sync
 from benchmarks.utils import parameterize
 
@@ -12,7 +12,7 @@ import numpy
     ('in_order', ['C', 'F']),
     ('out_order', ['C', 'F']),
 ])
-class Array(Benchmark):
+class Array(BenchmarkBase):
     def setup(self, ndim, in_order, out_order):
         self.x = numpy.zeros((10,) * ndim, order=in_order)
 
