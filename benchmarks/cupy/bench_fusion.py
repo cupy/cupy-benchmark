@@ -18,10 +18,9 @@ def fuse_shapes(*shape_args, **shapes_dict):
             elif fusion_mode == 'disabled':
                 func(*args)
             elif fusion_mode == 'compile':
-                raise NotImplementedError
-                # TODO(imanishi)
-                # fused_func._memo = {}
-                # fused_func.compile(*args)
+                fused_func.clear_cache()
+                dtypes = [_.dtype for _ in args]
+                fused_func.compile_with_dtypes(*dtypes)
             else:
                 raise ValueError('Invalid parameter')
 
@@ -43,7 +42,7 @@ def fuse_shapes(*shape_args, **shapes_dict):
 
 
 @sync
-@parameterize([('fusion_mode', ['enabled', 'disabled'])])
+@parameterize([('fusion_mode', ['enabled', 'disabled', 'compile'])])
 class Fusion(BenchmarkBase):
     def setup(self, fusion_mode):
         pass
