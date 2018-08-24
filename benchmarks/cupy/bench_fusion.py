@@ -20,7 +20,7 @@ def fuse_shapes(*shape_args, **shapes_dict):
             elif fusion_mode == 'compile':
                 fused_func.clear_cache()
                 dtypes = [_.dtype for _ in args]
-                fused_func.compile_with_dtypes(*dtypes)
+                fused_func._compile_from_dtypes(*dtypes)
             else:
                 raise ValueError('Invalid parameter')
 
@@ -42,7 +42,7 @@ def fuse_shapes(*shape_args, **shapes_dict):
 
 
 @sync
-@parameterize([('fusion_mode', ['enabled', 'disabled', 'compile'])])
+@parameterize([('fusion_mode', ['enabled', 'disabled'])])
 class Fusion(BenchmarkBase):
     def setup(self, fusion_mode):
         pass
